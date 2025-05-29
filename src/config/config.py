@@ -41,7 +41,7 @@ class CFG:
     batch_size = 4  # debug模式下减小batch size
     criterion = 'BCEWithLogitsLoss'
 
-    n_fold = 1  # debug模式下只使用一个fold
+    n_fold = 2  # debug模式下使用2个fold
     selected_folds = [0]  # debug模式下只训练第一个fold
 
     optimizer = 'AdamW'
