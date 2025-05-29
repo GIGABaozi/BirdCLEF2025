@@ -31,6 +31,10 @@ class BirdCLEFDataset(Dataset):
             
         mel_spec = torch.from_numpy(mel_spec).float()
         
+        # 确保声谱图维度正确 [H, W] -> [1, H, W]
+        if len(mel_spec.shape) == 2:
+            mel_spec = mel_spec.unsqueeze(0)
+            
         if self.mode == "train":
             # 在这里添加数据增强
             pass
