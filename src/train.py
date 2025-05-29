@@ -21,10 +21,11 @@ def main():
     # 加载数据
     train_df = pd.read_csv(cfg.train_csv)
     
-    # 在debug模式下只使用少量样本
+    # 在debug模式下使用100个样本
     if cfg.debug:
-        print("Debug mode: Using only 10 samples")
-        train_df = train_df.head(10)
+        print("Debug mode: Using 100 random samples")
+        train_df = train_df.sample(n=100, random_state=cfg.seed)
+        print(f"Selected {len(train_df)} samples")
     
     # 确保taxonomy.csv存在并加载类别数量
     if not os.path.exists(cfg.taxonomy_csv):
