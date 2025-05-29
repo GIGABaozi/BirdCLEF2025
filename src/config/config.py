@@ -1,8 +1,9 @@
 import torch
+import pandas as pd
 
 class CFG:
     seed = 42
-    debug = False  
+    debug = True  # 启用debug模式
     apex = False
     print_freq = 100
     num_workers = 2
@@ -36,12 +37,12 @@ class CFG:
     FMAX = 14000
     
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    epochs = 10  
-    batch_size = 32  
+    epochs = 2  # debug模式下减少epochs
+    batch_size = 4  # debug模式下减小batch size
     criterion = 'BCEWithLogitsLoss'
 
-    n_fold = 4
-    selected_folds = [0, 1, 2, 3, 4]   
+    n_fold = 1  # debug模式下只使用一个fold
+    selected_folds = [0]  # debug模式下只训练第一个fold
 
     optimizer = 'AdamW'
     lr = 5e-4 
@@ -54,7 +55,17 @@ class CFG:
     aug_prob = 0.5  
     mixup_alpha = 0.5  
     
+    def __init__(self):
+        # 从taxonomy.csv加载类别数量
+        try:
+            taxonomy_df = pd.read_csv(self.taxonomy_csv)
+            self.num_classes = len(taxonomy_df['primary_label'].unique())
+        except:
+            print("Warning: Could not load taxonomy.csv, setting num_classes to 0")
+            self.num_classes = 0
+    
     def update_debug_settings(self):
         if self.debug:
             self.epochs = 2
-            self.selected_folds = [0] 
+            self.selected_folds = [0]
+            self.batch_size = 4 

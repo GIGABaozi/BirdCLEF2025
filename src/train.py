@@ -21,6 +21,19 @@ def main():
     # 加载数据
     train_df = pd.read_csv(cfg.train_csv)
     
+    # 在debug模式下只使用少量样本
+    if cfg.debug:
+        print("Debug mode: Using only 10 samples")
+        train_df = train_df.head(10)
+    
+    # 确保taxonomy.csv存在并加载类别数量
+    if not os.path.exists(cfg.taxonomy_csv):
+        raise FileNotFoundError(f"taxonomy.csv not found at {cfg.taxonomy_csv}")
+    
+    taxonomy_df = pd.read_csv(cfg.taxonomy_csv)
+    cfg.num_classes = len(taxonomy_df['primary_label'].unique())
+    print(f"Number of classes: {cfg.num_classes}")
+    
     # 生成声谱图
     if cfg.LOAD_DATA:
         spectrograms = generate_spectrograms(train_df, cfg)
